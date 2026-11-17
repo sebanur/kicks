@@ -1,0 +1,87 @@
+import type { FC } from "react";
+import { ErrorMessage, Field } from "formik";
+
+interface Props {
+  name: string;
+  label?: string;
+  placeholder?: string;
+  type?: string;
+  required?: boolean;
+  options?: string[];
+  info?: string;
+  styles?: string;
+}
+
+const FormField: FC<Props> = ({
+  label,
+  name,
+  placeholder,
+  type = "text",
+  required = true,
+  options,
+  info,
+  styles,
+}) => {
+  return (
+    <div className={`relative ${styles}`}>
+      <div>
+        {type === "radio" ? (
+          <div>
+            {label && (
+              <label className="text-sm/6 font-semibold text-gray-800">
+                {label} {required && <span className="text-red-500 ms-1">*</span>}
+              </label>
+            )}
+
+            <div className="flex gap-4 mt-2">
+              {options?.map((option) => (
+                <div className="flex gap-4">
+                  <Field type="radio" id={option} name={name} value={option} />
+                  <label htmlFor={option}>{option}</label>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : type === "checkbox" ? (
+          <div className="flex">
+            <Field
+              id={name}
+              name={name}
+              type={type}
+              required={required}
+              className={`size-5 me-2 shrink-0`}
+            />
+
+            <label className="font-semibold">{label}</label>
+          </div>
+        ) : (
+          <div>
+            {label && (
+              <label className="text-sm/6 font-semibold text-gray-800">
+                {label} {required && <span className="text-red-500 ms-1">*</span>}
+              </label>
+            )}
+
+            <Field
+              id={name}
+              name={name}
+              type={type}
+              required={required}
+              placeholder={placeholder}
+              className={`rounded-lg py-2.5 px-4 border border-dark-gray w-full placeholder:text-gray-400`}
+            />
+            {info && <span className="font-rubik text-xs text-zinc-600 leading-0">{info}</span>}
+          </div>
+        )}
+
+        <ErrorMessage
+          name={name}
+          component="div"
+          className="absolute -bottom-5 left-0 text-red-500 text-sm"
+        />
+      </div>
+    </div>
+  );
+};
+
+export default FormField;
